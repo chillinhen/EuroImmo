@@ -1,0 +1,249 @@
+﻿var POIMarker = new Array(50);
+var gdir, map, mapumgebung, myOptions;
+var CMSPfad = '/CMSWebParts/MyWebParts/KENTICOOstBelgienNet/';
+var MapDetailBoxID = 'gmapsidearea';
+	
+function initialize(mapobjid, withinfo) {   
+  var latlng = new google.maps.LatLng(DetGEOBreite, DetGEOLaenge);
+  if(mapobjid=='gmapDetail_Lage')
+  {
+	  myOptions = { 
+	    zoom: 15, 
+	    center: latlng, 
+	    mapTypeControl: false, 
+	    scrollwheel: true,
+	    disableDefaultUI: true,
+	    mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU }
+	  };
+  }
+  else
+  {                
+	  myOptions = { 
+	    zoom: 16, 
+	    center: latlng, 
+	    mapTypeControl: true, 
+	    scrollwheel: true,
+	    mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU }
+	  };
+  }
+	map = new google.maps.Map(document.getElementById(mapobjid), myOptions);
+	
+	if(mapobjid=='gmapFullscreen')
+	{
+		map.addListener('center_changed', function () {
+		if(IntmaplblKadasterSurf!=null) clearTimeout(IntmaplblKadasterSurf);
+		IntmaplblKadasterSurf = setTimeout("checkforkadaster();", 750);
+		});			
+		map.addListener('zoom_changed', function () {
+			if(IntmaplblKadasterSurf!=null) clearTimeout(IntmaplblKadasterSurf);
+			IntmaplblKadasterSurf = setTimeout("checkforkadaster();", 750);
+		});
+	}
+
+	//Icons mit Info-Fenster
+	var point = new google.maps.LatLng(DetGEOBreite, DetGEOLaenge);
+	var marker = createStaticMarker(point, 'ico_immo.png', mapobjid);
+}
+
+function createStaticMarker(point, icon, gmapobjid) {
+  var marker;
+
+  marker = new google.maps.Marker({
+    position: point,
+    map: map,
+    icon: DLSSrvPfad + 'Images/BRIMapIcons/' + icon
+  });
+
+  return marker;
+}
+
+function initializeumgebung(mapobjid, withinfo) {
+  var latlng = new google.maps.LatLng(DetGEOBreite, DetGEOLaenge);
+  if (mapobjid == 'gmapDetail_Lage') {
+    myOptions = {
+      zoom: 15,
+      center: latlng,
+      mapTypeControl: false,
+      scrollwheel: true,
+      disableDefaultUI: true,
+      mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU }
+    };
+  }
+  else {
+    myOptions = {
+      zoom: 16,
+      center: latlng,
+      mapTypeControl: true,
+      scrollwheel: true,
+      mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU }
+    };
+  }
+  mapumgebung = new google.maps.Map(document.getElementById(mapobjid), myOptions);
+
+  //Icons mit Info-Fenster
+  var point = new google.maps.LatLng(DetGEOBreite, DetGEOLaenge);
+  var marker = createUmgebungMarker(point, 'ico_immo.png', '', '', immoObjID, mapobjid);
+}
+
+function createUmgebungMarker(point, icon, catid, linkid, immoid, gmapobj) {
+  var marker;
+  if(icon!='')
+  {
+    marker = new google.maps.Marker({
+	  position: point,
+	  map: mapumgebung,
+	  icon: DLSSrvPfad+'Images/BRIMapIcons/'+icon
+    });
+  }
+  else
+  {
+    marker = new google.maps.Marker({
+	  position: point,
+	  map: mapumgebung,
+	  icon: DLSSrvPfad+'/Images/BRIMapIcons/ico_default.png'
+    });   
+  }
+
+  if (linkid != '') {
+    google.maps.event.addListener(marker, "click", function (e) {
+      showajaxmapsidecontent('' + catid + '', linkid, gmapobj);
+    });
+  }
+
+  if (immoid != '') {
+    google.maps.event.addListener(marker, "click", function (e) {
+      showimmoajaxmapsidecontent(immoid, gmapobj);
+    });
+  } 
+
+return marker;
+}
+
+function showimmoajaxmapsidecontent(objID, txtmap) {
+  $.ajax({
+    url: CMSPfad + "immo/immoajax.aspx?mode=getimmomapsidebar&oID=" + objID,
+    type: "POST",
+    cache: false,
+    success: function (innerhtml) {
+      if (innerhtml.indexOf('##BeginContent##') >= 0) {
+        innerhtml = innerhtml.substring(innerhtml.indexOf('##BeginContent##') + 16, innerhtml.indexOf('##EndContent##'));
+        if (txtmap == 'gmapFullscreen' && MapDetailBoxID.indexOf('_full') < 0) MapDetailBoxID = MapDetailBoxID + '_full';
+        if (document.getElementById(MapDetailBoxID)) $('#' + MapDetailBoxID).remove();
+        
+        var newNode = document.createElement("div");
+        newNode.setAttribute("id", MapDetailBoxID);
+        newNode.setAttribute("class", 'gmapsidearea');
+        document.getElementById(txtmap).appendChild(newNode);        
+
+        var HauptDiv = document.getElementById(MapDetailBoxID);
+        HauptDiv.style.display = 'block';
+        HauptDiv.style.width = 280 + "px";
+        HauptDiv.style.height = document.getElementById(txtmap).offsetHeight + "px";
+        HauptDiv.innerHTML = innerhtml;
+        MapDetailBoxID = MapDetailBoxID.replace('_full', '');
+      }
+    }
+  });
+}
+
+function showajaxmapsidecontent(innercatid, innerlinkid, txtmap) {
+  $.ajax({
+    url: CMSPfad + "BRIAJAXDataHandling.aspx?catid=" + innercatid + "&linkid=" + innerlinkid,
+    data: 'mode=getmapsidebar',
+    type: "POST",
+    cache: false,
+    success: function (innerhtml) {
+      if (innerhtml.indexOf('##BeginContent##') >= 0) {
+        innerhtml = innerhtml.substring(innerhtml.indexOf('##BeginContent##') + 16, innerhtml.indexOf('##EndContent##'));
+        if (txtmap == 'gmapFullscreen' && MapDetailBoxID.indexOf('_full') < 0) MapDetailBoxID = MapDetailBoxID + '_full';
+        if (document.getElementById(MapDetailBoxID)) $('#' + MapDetailBoxID).remove();
+        var newNode = document.createElement("div");
+        newNode.setAttribute("id", MapDetailBoxID);
+        newNode.setAttribute("class", 'gmapsidearea');
+        document.getElementById(txtmap).appendChild(newNode);
+
+        var HauptDiv = document.getElementById(MapDetailBoxID);
+        HauptDiv.style.display = 'block';
+        HauptDiv.style.width = 280 + "px";
+        HauptDiv.style.height = document.getElementById(txtmap).offsetHeight + "px";
+        HauptDiv.innerHTML = innerhtml;
+        MapDetailBoxID = MapDetailBoxID.replace('_full', '');
+      }
+    }
+  });
+}
+
+function closemapsidecontent() {
+  if (document.getElementById(MapDetailBoxID) != undefined) document.getElementById(MapDetailBoxID).style.display = 'none';  
+  if (document.getElementById(MapDetailBoxID + '_full') != undefined) document.getElementById(MapDetailBoxID + '_full').style.display = 'none';  
+}
+
+function AutoCenter() {
+  var bounds = new google.maps.LatLngBounds();
+  mcnt = 0
+  for (t in POIMarker) {
+    for (mark in POIMarker[t]) {
+      if (POIMarker[t][mark].position != undefined) {
+        bounds.extend(POIMarker[t][mark].position);
+        mcnt = mcnt + 1;
+      }
+    }
+  }
+  if (mcnt > 0)
+    mapumgebung.fitBounds(bounds);
+  if (mcnt == 1) {
+    setTimeout("mapumgebung.setZoom(14)", 100);
+  }
+}
+
+function downloadUrl(url, callback) {
+  var request = window.ActiveXObject ?
+                new ActiveXObject('Microsoft.XMLHTTP') :
+                new XMLHttpRequest;
+
+  request.onreadystatechange = function () {
+    if (request.readyState == 4) {
+      request.onreadystatechange = function () { };
+      callback(request.responseText, request.status);
+    }
+  };
+
+  request.open('GET', url, true);
+  request.send(null);
+}
+function parseXml(str) {
+  if (window.ActiveXObject) {
+    var doc = new ActiveXObject('Microsoft.XMLDOM');
+    doc.loadXML(str);
+    return doc;
+  }
+  else if (window.DOMParser) {
+    return (new DOMParser).parseFromString(str, 'text/xml');
+  }
+}
+function SetUmgebungMapPOI(URL, mapobjid,uid) {
+  downloadUrl(URL, function (data, responseCode) {
+    var xml = parseXml(data);
+    var MapPosition = xml.documentElement.getElementsByTagName("mapposition");
+    var markers = xml.documentElement.getElementsByTagName("marker");
+    POIMarker[uid] = new Array();
+    POIMarker[uid] = new Array(markers.length + 2);
+    if (markers.length > 0) {
+      for (var i = 0; i < markers.length; i++) {
+        var point = new google.maps.LatLng(parseFloat(markers[i].getAttribute("lat")), parseFloat(markers[i].getAttribute("lng")));
+        POIMarker[uid][i] = createUmgebungMarker(point, markers[i].getAttribute("icon"), markers[i].getAttribute("catID"), markers[i].getAttribute("linkID"),'', mapobjid);
+      }
+    }
+    AutoCenter();
+  });
+}
+
+function RemoveAllmarker(uid) {
+  if (POIMarker[uid].length > 0) {
+    for (j = 0; j < POIMarker[uid].length; j++) {
+      if (POIMarker[uid][j] != undefined)
+        POIMarker[uid][j].setMap(null);
+    }
+    POIMarker[uid].length = 0;
+  }
+}

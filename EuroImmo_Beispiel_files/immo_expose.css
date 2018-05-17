@@ -1,0 +1,311 @@
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+	border-bottom-color: #555 !important;
+}
+
+
+/*----------------------------------------------------------------------- EXPOSE */
+
+.print-logo {
+	display: block !important;
+	border-bottom: 1px solid #ef9430;
+	padding: 10px 0;
+	height: 110px;
+}
+
+.print-logo > img {
+	max-width: 100%;
+	max-height: 100%;
+	display: block;
+}
+
+.detail_titel {
+	font-size: 14pt;
+	padding-right: 0;
+	margin-bottom: 5px;
+}
+
+.immo-item--adresse {
+	font-size: 10pt;
+	margin-top: 10px;
+	margin-bottom: 3px;
+	font-weight: 400;
+	overflow: hidden;
+}
+
+h2 {
+	font-size: 12pt;
+	margin-top: 35px;
+	border-bottom: 1px solid #ef9430;
+}
+
+.detail_beschreibung p,
+.detail_beschreibung li,
+.detail_austattung p,
+.detail_austattung li {
+	font-size: 10pt;
+}
+
+.immo-item--ref {
+	font-size: 11px;
+	font-weight: 400;
+	margin-top: 0;
+}
+
+.expose-bild-karte {
+	overflow: hidden;
+	height: 300px;
+	margin-top:30px;
+}
+
+.expose-bild-karte .eintrag_karte {
+	float: right;
+	width: 42%;
+}
+
+.expose-bild {
+	width: 57%;
+	float: left;
+	height: 300px;
+	overflow: hidden;
+}
+
+.expose-bild > img {
+	height: 300px;
+	width: auto;
+	max-width: none !important;
+}
+
+.immo-item--infos_detail {
+	padding: 0;
+}
+
+.immo-item--daten {
+	padding: 0 0 10px 0;
+	margin-top: 0;
+	border-top: 0px solid #dfdfdf;
+	border-bottom: 0px solid #dfdfdf;
+	overflow: hidden;
+}
+
+.immo-item--daten + .immo-item--daten {
+	border-top: 1px solid #dfdfdf;
+	padding-top: 10px;
+}
+
+.immo-item--daten > div {
+	float: left;
+	width: 32.33%;
+	margin-left: 1%;
+	margin-bottom: 1%;
+	padding-left: 2.5%;
+	border-left: 3px solid #dfdfdf;
+	font-weight: 600;
+	font-size: 10pt;
+	text-align: left;
+}
+
+.immo-item--daten > div:nth-child(3n+1) {
+	margin-left: 0;
+	padding-left: 2.5%;
+	border-left: 3px solid #dfdfdf;
+	clear: left;
+}
+
+.immo-daten--label {
+	display: block;
+	font-weight: 300;
+	font-size: 9pt;
+	margin-bottom: 5px;
+}
+
+.peb-ico_detail {
+	width: 85px;
+}
+
+#ObjektBildThumbs {
+	overflow: hidden;
+}
+
+#ObjektBildThumbs img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+#ObjektBildThumbs > div {
+	width: 48%;
+	float: left;
+	margin: 0 0 4% 4%;
+	height: 200px;
+	overflow: hidden;
+	text-align: center;
+}
+
+#ObjektBildThumbs > div:nth-child(2n+1) {
+	width: 48%;
+	float: left;
+	margin: 0 0 4% 0;
+}
+
+.eintrag_infos_immo {
+	overflow: hidden;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #000;
+}
+
+.EintragLogo {
+	float: left;
+	width: 160px;
+	height: 120px;
+	overflow: hidden;
+	position: relative;
+	line-height: 120px;
+	text-align: center;
+}
+
+.EintragLogo img {
+	max-height: 120px;
+	max-width: 100% !important;
+	margin: auto;
+	line-height: 120px;
+	display: inline-block;
+}
+
+.expose-header {
+	overflow: hidden;
+}
+
+.expose-header > h2 {
+	width: 100%;
+	margin-bottom: 0;
+	margin-left: 30px;
+}
+
+.eintrag-info-daten {
+	overflow: hidden;
+	font-size: 10pt;
+	padding-left: 30px;
+	padding-right: 10px;
+	width: 50%;
+	float: left;
+}
+
+.eintrag-info-daten + .eintrag-info-daten {
+	padding-right: 0;
+}
+
+.sidedata-tel:before {
+	content: "Tel.: ";
+	display: inline;
+}
+
+.sidedata-fax:before {
+	content: "Fax: ";
+	display: inline;
+}
+
+.sidedata-mobil:before {
+	content: "Mobil: ";
+	display: inline;
+}
+
+.eintrag-info-daten p {
+	margin-bottom: 4px;
+}
+
+.eintrag-info-daten + .eintrag-info-daten {
+	padding-left: 0;
+}
+
+.eintrag-info-daten a {
+	color: #000;
+	text-decoration: none;
+}
+
+.detailansicht_immo .immo-austattung_detail {
+	margin: 0;
+	padding: 0;
+	list-style: none outside;
+	overflow: hidden;
+}
+
+.detailansicht_immo .immo-austattung_detail > li {
+	float: left;
+	width: 32%;
+	padding-left: 22px !important;
+	padding-bottom: 20px;
+	margin-left: 2%;
+	margin-bottom: 0;
+	border-right: 1px solid #efefef;
+	position: relative;
+}
+
+.detailansicht_immo .immo-austattung_detail > li > img {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.detailansicht_immo .immo-austattung_detail > li:nth-child(3n) {
+	border-right: 0px solid #dfdfdf;
+}
+
+.detailansicht_immo .immo-austattung_detail > li:nth-child(3n+1) {
+	clear: left;
+	margin-left: 0%;
+}
+
+.eintrag-info-daten a {
+	text-decoration: none;
+}
+
+.detail_beschreibung table,
+.detail_beschreibung table td {
+	border: 1px solid #dfdfdf;
+	font-size: 13px;
+	border-collapse: collapse;
+}
+
+.detail_beschreibung table td {
+	padding: 10px;
+}
+
+.eintrag-info-kontakt {
+	overflow: hidden;
+}
+
+.footer-full {
+	text-align:center;
+	font-size:9pt;
+	padding-top: 10px;
+	border-top: 1px solid #000;
+}
+
+.footer-full img {
+	margin:10px auto;
+}
+
+@media print {
+	/* .page-break {
+		display: block;
+		page-break-before: always;
+	}
+	*/
+	.detailansicht + h2,
+	#kontaktbereich {
+		page-break-before: always;
+	}
+	.immo-austattung_detail {
+		page-break-inside: avoid;
+	}
+	.eintrag_redaktion > h2:first-of-type {
+		page-break-before: avoid;
+	}
+}
+
+@page {
+	size: A4;
+	margin: 1cm 2cm;
+}
