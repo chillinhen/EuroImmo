@@ -1,6 +1,22 @@
 /****Vars ****/
 $col-body-txt:#333;
-$col-border: #555;
+$col-primary:#F98D3C;
+$col-secondary:#3C3C3B;
+$col-border:#CCCACC;
+$outer-grid:2rem;
+
+@mixin font-base-style{
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+@mixin subline($col) {
+    content:'';
+    display:block;
+    height:2px;
+    margin-bottom: 0.75rem;
+    background: $col;
+}
+@mixin foo {border:1px solid red;}
 @mixin flexbox{
     display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
     display: -ms-flexbox;  /* TWEENER - IE 10 */
@@ -20,10 +36,24 @@ $col-border: #555;
     -ms-flex: $item;           /* IE 10 */
     flex: $item;  
 }
-%flexbox-def{
-    @include flexbox;
-}
 
+@mixin table-style{
+    @include flexbox;
+    flex-wrap: wrap;
+    flex-grow:1;
+    > * {
+        flex-basis:33%;
+        flex-grow:0;
+        flex-shrink:0;
+        padding:0.25em 0.5em;
+        &:nth-child(6n+1),
+            &:nth-child(6n+2),
+            &:nth-child(6n+3){
+            background:lighten($col-border,10%);
+        }
+    }
+}
+/*** Custom Layout ***/
 *,
 *:before,
 *:after {
@@ -34,325 +64,299 @@ html, body{
     font-family: sans-serif;
     font-size: 1rem;
     line-height: 1.4;
-    color:$col-body-txt;
+    color:$col-body-txt;  
 }
-
+body{
+    margin:0 $outer-grid;
+}
 /*** Custom Layout ***/
-.eintrag-info-kontakt{
-    @extend %flexbox-def;
-    justify-content:space-between;
-    align-items:center;
-    .EintragLogo{
-/*        float: left;
-	width: 160px;
-	height: 120px;
-	overflow: hidden;
-	position: relative;
-	line-height: 120px;*/
-	text-align: center;
-    }
-    .expose-header{
-        @include flex-child(2);
-/*        overflow: hidden;*/
-        padding:0 2rem;
-        > h2 {
-/*	width: 100%;
-	margin-bottom: 0;
-	margin-left: 30px;*/
-}
+
+.dls-eintrag-sidebar{
+    margin-left:-$outer-grid;
+    margin-right:-$outer-grid;
+    background-color: $col-primary;
+    *{
+        color:white !important;
     }
 }
-
-/**** Old ***/
-
 
 
 /*----------------------------------------------------------------------- EXPOSE */
-
+/*
 .print-logo {
-	display: block !important;
-	border-bottom: 1px solid #ef9430;
-	padding: 10px 0;
-	height: 110px;
+        display: block !important;
+        border-bottom: 1px solid #ef9430;
+        padding: 10px 0;
+        height: 110px;
+        > img {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;}
 }
 
-.print-logo > img {
-	max-width: 100%;
-	max-height: 100%;
-	display: block;
-}
-
+*/
 .detail_titel {
-	font-size: 14pt;
-	padding-right: 0;
-	margin-bottom: 5px;
+    font-size: 1.25rem;
+    font-weight:300;
+    padding-top: $outer-grid;
+    color:darken($col-border,50%);
+
+    .immo-item--adresse {
+        font-size: 0.75rem;
+        margin-bottom: 0.75rem;
+        margin-top:0;
+        font-weight: 600;
+        overflow: hidden;
+        text-transform:uppercase;
+        color:darken($col-secondary,50%);
+    }
+    + .immo-item--ref {
+        font-size: 0.75rem;
+        font-weight: 400;
+        margin-top: 0;
+        display: block;
+        color:darken($col-secondary,50%);
+        border-top: 1px solid $col-primary;
+        text-align: right;
+        font-style: italic;
+        padding-top: 2px;
+    }
 }
 
-.immo-item--adresse {
-	font-size: 10pt;
-	margin-top: 10px;
-	margin-bottom: 3px;
-	font-weight: 400;
-	overflow: hidden;
+.detail_ausstattung,
+.detail_beschreibung,
+.immo-austattung_detail,
+.eintrag-info-daten,
+[class*="sidedata-"]{
+    p,li{
+        @include font-base-style;
+    }
 }
 
-h2 {
-	font-size: 12pt;
-	margin-top: 35px;
-	border-bottom: 1px solid #ef9430;
-}
 
-.detail_beschreibung p,
-.detail_beschreibung li,
-.detail_austattung p,
-.detail_austattung li {
-	font-size: 10pt;
-}
 
-.immo-item--ref {
-	font-size: 11px;
-	font-weight: 400;
-	margin-top: 0;
-}
 
 .expose-bild-karte {
-	overflow: hidden;
-	height: 300px;
-	margin-top:30px;
+    margin:{
+        top:$outer-grid;
+        right:-$outer-grid;
+        bottom:$outer-grid;
+        left:-$outer-grid;
+    }
+    padding:$outer-grid;
+    background:$col-border;
+
+    @include flexbox;
+    .expose-bild, .eintrag_karte{
+        overflow:hidden;
+        height:300px;
+    }
+    .expose-bild{
+        flex-basis:60%;
+    }
+    .eintrag_karte{
+        flex-basis:40%;
+    }
+    .eintrag_karte,
+    .expose-bild > img {
+        height: 300px;
+        width: auto;
+        max-width: none !important;
+    }
 }
 
-.expose-bild-karte .eintrag_karte {
-	float: right;
-	width: 42%;
-}
+.buehne{
+    h2 {
+        display:inline-block;
+        padding:6px 8px 4px 8px;
+        margin:0 0 0 1rem;
+        background-color: $col-primary;
+        color: white;
+        border: 0;
+        font-weight: 400;
+        letter-spacing: .25em;
+        font-size: .75rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        + * {
+            padding: 2rem 0 1rem 0;
+            border:{
+                width:1px 0 0 0;
+                style:solid;
+                color:$col-border;
+            };
+            margin:{
+                top:-7px;
+                right:0;
+                bottom:1rem;
+                left:0;
+            }
+        }
+    }
 
-.expose-bild {
-	width: 57%;
-	float: left;
-	height: 300px;
-	overflow: hidden;
 }
+.immo-item--daten{
+    @include table-style;
+    > *{
+        font-size: 10pt;
+        font-weight: 600;
+        text-align: left;
+    }
 
-.expose-bild > img {
-	height: 300px;
-	width: auto;
-	max-width: none !important;
+
+    .immo-daten--label {
+        display: block;
+        font-weight: 300;
+        font-size: 9pt;
+        margin:0;
+        text-transform: uppercase;
+    }
 }
+.immo-austattung_detail {
+    list-style: none outside;
+    @include table-style;
 
-.immo-item--infos_detail {
-	padding: 0;
+    > li {
+        position: relative;
+        padding-left: 22px ;
+        > img {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
 }
-
-.immo-item--daten {
-	padding: 0 0 10px 0;
-	margin-top: 0;
-	border-top: 0px solid #dfdfdf;
-	border-bottom: 0px solid #dfdfdf;
-	overflow: hidden;
-}
-
-.immo-item--daten + .immo-item--daten {
-	border-top: 1px solid #dfdfdf;
-	padding-top: 10px;
-}
-
-.immo-item--daten > div {
-	float: left;
-	width: 32.33%;
-	margin-left: 1%;
-	margin-bottom: 1%;
-	padding-left: 2.5%;
-	border-left: 3px solid #dfdfdf;
-	font-weight: 600;
-	font-size: 10pt;
-	text-align: left;
-}
-
-.immo-item--daten > div:nth-child(3n+1) {
-	margin-left: 0;
-	padding-left: 2.5%;
-	border-left: 3px solid #dfdfdf;
-	clear: left;
-}
-
-.immo-daten--label {
-	display: block;
-	font-weight: 300;
-	font-size: 9pt;
-	margin-bottom: 5px;
+#ObjektBildThumbs{
+    @include flexbox;
+    flex-wrap: wrap;
+    flex-grow:1;
+    margin:0 -.5rem;
+    > div {
+        flex-basis:calc(50% - 2rem);
+        flex-grow:0;
+        flex-shrink:0;
+        margin:.5rem;
+        height: 250px;
+        overflow: hidden;
+        background:lighten($col-border,12%);
+        border:1px solid $col-border;
+        text-align: center;
+        padding: .75rem 0;
+    }
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
 }
 
 .peb-ico_detail {
-	width: 85px;
+    width: 85px;
+    @include foo;
 }
 
-#ObjektBildThumbs {
-	overflow: hidden;
-}
-
-#ObjektBildThumbs img {
-	max-width: 100%;
-	max-height: 100%;
-}
-
-#ObjektBildThumbs > div {
-	width: 48%;
-	float: left;
-	margin: 0 0 4% 4%;
-	height: 200px;
-	overflow: hidden;
-	text-align: center;
-}
-
-#ObjektBildThumbs > div:nth-child(2n+1) {
-	width: 48%;
-	float: left;
-	margin: 0 0 4% 0;
-}
 
 .eintrag_infos_immo {
-	overflow: hidden;
-	padding-bottom: 10px;
-	border-bottom: 1px solid #000;
+    overflow: hidden;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $col-border;
+
+    .eintrag-info-kontakt{
+        @include flexbox;
+        justify-content:space-between;
+        align-items:flex-end;
+        overflow:hidden;
+        .EintragLogo{
+            text-align: center;
+            img {
+                max-height: 120px;
+                max-width: 100% !important;
+                margin: auto;
+                line-height: 120px;
+                display: inline-block;
+            }
+        }
+        .expose-header{
+            @include flex-child(2);
+            padding:0 2rem;
+            > h2 {
+                font-size: 0.75rem;
+                margin-top: 2.2rem;
+                text-transform:uppercase;
+                &:after{@include subline(currentColor);} 
+            }
+            .eintrag-info-daten {
+                width: 50%;
+                float: left; 
+                p {
+                    margin-bottom: .25rem;
+                }
+                a {
+                    color: $col-primary;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
 }
 
-.EintragLogo {
-
-}
-
-.EintragLogo img {
-	max-height: 120px;
-	max-width: 100% !important;
-	margin: auto;
-	line-height: 120px;
-	display: inline-block;
-}
-
-
-.eintrag-info-daten {
-	overflow: hidden;
-	font-size: 10pt;
-	padding-left: 30px;
-	padding-right: 10px;
-	width: 50%;
-	float: left;
-}
-
-.eintrag-info-daten + .eintrag-info-daten {
-	padding-right: 0;
-}
 
 .sidedata-tel:before {
-	content: "Tel.: ";
-	display: inline;
+    content: "Tel.: ";
+    display: inline;
 }
 
 .sidedata-fax:before {
-	content: "Fax: ";
-	display: inline;
+    content: "Fax: ";
+    display: inline;
 }
 
 .sidedata-mobil:before {
-	content: "Mobil: ";
-	display: inline;
+    content: "Mobil: ";
+    display: inline;
+}
+.detail_beschreibung{
+    table, td{
+        border: 1px solid $col-border;
+        @include font-base-style;
+        border-collapse: collapse;
+    }
+    td{
+        padding:.75rem;
+    }
+}
+.footer-full{
+    text-align:center;
+    font-size:smaller;
+    padding:.75rem;
+    color:darken($col-border,25%);
+    border-top: 1px solid $col-border;
+
+    img {
+        margin:1rem auto;
+    }
 }
 
-.eintrag-info-daten p {
-	margin-bottom: 4px;
-}
+@media screen {
+     .page-break {
+            display: block;
+            page-break-before: always;
+    }
+    
+    .detailansicht + h2,
+    #kontaktbereich {
+        page-break-before: always;
+    }
+    .immo-austattung_detail {
+        page-break-inside: avoid;
+    }
+    .eintrag_redaktion > h2:first-of-type {
+        page-break-before: avoid;
+    }
 
-.eintrag-info-daten + .eintrag-info-daten {
-	padding-left: 0;
-}
 
-.eintrag-info-daten a {
-	color: #000;
-	text-decoration: none;
+    @page {
+        size: A4;
+        margin: 1cm 2cm;
+    }
 }
-
-.detailansicht_immo .immo-austattung_detail {
-	margin: 0;
-	padding: 0;
-	list-style: none outside;
-	overflow: hidden;
-}
-
-.detailansicht_immo .immo-austattung_detail > li {
-	float: left;
-	width: 32%;
-	padding-left: 22px !important;
-	padding-bottom: 20px;
-	margin-left: 2%;
-	margin-bottom: 0;
-	border-right: 1px solid #efefef;
-	position: relative;
-}
-
-.detailansicht_immo .immo-austattung_detail > li > img {
-	position: absolute;
-	left: 0;
-	top: 0;
-}
-
-.detailansicht_immo .immo-austattung_detail > li:nth-child(3n) {
-	border-right: 0px solid #dfdfdf;
-}
-
-.detailansicht_immo .immo-austattung_detail > li:nth-child(3n+1) {
-	clear: left;
-	margin-left: 0%;
-}
-
-.eintrag-info-daten a {
-	text-decoration: none;
-}
-
-.detail_beschreibung table,
-.detail_beschreibung table td {
-	border: 1px solid #dfdfdf;
-	font-size: 13px;
-	border-collapse: collapse;
-}
-
-.detail_beschreibung table td {
-	padding: 10px;
-}
-
-.eintrag-info-kontakt {
-	overflow: hidden;
-}
-
-.footer-full {
-	text-align:center;
-	font-size:9pt;
-	padding-top: 10px;
-	border-top: 1px solid #000;
-}
-
-.footer-full img {
-	margin:10px auto;
-}
-
-@media print {
-	/* .page-break {
-		display: block;
-		page-break-before: always;
-	}
-	*/
-	.detailansicht + h2,
-	#kontaktbereich {
-		page-break-before: always;
-	}
-	.immo-austattung_detail {
-		page-break-inside: avoid;
-	}
-	.eintrag_redaktion > h2:first-of-type {
-		page-break-before: avoid;
-	}
-}
-
-@page {
-	size: A4;
-	margin: 1cm 2cm;
-}
-
